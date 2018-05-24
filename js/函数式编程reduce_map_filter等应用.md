@@ -127,4 +127,4 @@ function compute(state, originData) {
 
 坏处:
 1. 初次阅读，难以阅读理解(其实写习惯，就很容易理解了)
-2. 性能会有损牺牲(但性能从现在以后来讲，应该更不是问题，毕竟硬件性能会越来越高，或许以后也会加入惰性计算优化map、reduce等方法)。性能问题可以利用[loadsh库](https://github.com/lodash/lodash)、[ramda库](https://github.com/ramda/ramda)
+2. 性能会有损牺牲(但性能从现在以后来讲，应该更不是问题，毕竟硬件性能会越来越高，或许以后也会加入惰性计算优化map、reduce等方法)。性能问题可以利用实现惰性计算的[loadsh库](https://github.com/lodash/lodash)、[ramda库](https://github.com/ramda/ramda)解决
