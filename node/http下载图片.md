@@ -3,9 +3,8 @@
 **注意知识点:**
 > 1. 在node发请求，默认情况下响应体设置的编码为buffer binary，监听response的data事件拼接chunk，最终调用Buffer.concat合并成一个Buffer对象
 > 2. Buffer对象，与多种编码(常见的:ascii、utf8、base64、hex、binary)字符串类型之间的转换
-> 3. utf8编码字符串独特的工作方式，导致无法其余编码字符串之间进行转化，然后再转换到之前的样子[请看这边文章详细举例解释]()
+> 3. utf8编码字符串独特的工作方式, Buffer二进制转化为utf8后，是无法再转换为其他编码的（因为buffer转换为utf8已经是乱码）
 > 4. 对于不能识别的字节流会解码成�，重点是�这货竟然有相应的utf8编码，编码为0xFFFD。这里有个关键点，很多字节流是无法正确解码的，但他们都会用�表示，而�字符又只有一种编码，所以对二进制数据如：图片，视频等，通过utf8编码并保存到变量后，是无法通过utf8原样解码成原来二进制的。
-
 
 
 ### 直接上代码，看注释即可
@@ -32,8 +31,6 @@ const req = http.get(url, res => {
       // chunk此处，会调用chunk.toString('utf8')转换为utf8编码字符串
       tmpChunk += chunk; // 最终为utf8编码类型字符串
       // 保存为utf8是无法解码为原来的二进制数据
-
-      
     */
   });
   res.on('end', () => {
@@ -77,4 +74,3 @@ request.get({
 > 参考资料
 > [node http](https://nodejs.org/api/http.html)
 > [node utf8 to binary](https://stackoverflow.com/questions/25223776/node-buffers-from-utf8-to-binary)
-

@@ -8,6 +8,9 @@
 [具体实现代码链接](https://github.com/xuqinggang/qrcode-color/blob/master/index.ts#L3-L53)
 ```javascript
 /**
+主要原理：利用QRCode.create创建的二维码矩阵数据，寻找可染色的module，填充img元素
+*/
+/**
  * 利用qrcode modules Bitmatrix，向pngImage.data填充rgba
  * @param imgData
  * @param qr 利用[QRCode.create](https://github.com/soldair/node-qrcode#createtext-options)创建返回的qrObj
