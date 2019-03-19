@@ -74,3 +74,4 @@ request.get({
 > 参考资料
 > [node http](https://nodejs.org/api/http.html)
 > [node utf8 to binary](https://stackoverflow.com/questions/25223776/node-buffers-from-utf8-to-binary)
+> [Node.js 不深也不浅得了解下编码](https://segmentfault.com/a/1190000002787763)
