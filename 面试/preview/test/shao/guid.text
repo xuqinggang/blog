@@ -1,0 +1,353 @@
+事件冒泡
+  addEventListent('click', function() {}, false) // false表示不在捕获阶段  在冒泡阶段触发
+事件委托
+  事件委托就是利用冒泡的原理，把事件加到父元素或祖先元素上，触发执行效果。
+
+preventDefault:
+   阻止默认事件  比如 点击a标签默认打开标签页 比如点击checkbox默认勾选上
+stopPropgation:
+    阻止事件传播
+
+dom操作：
+  document.getElementById
+  document.getElementsByTagName 
+  document.getElementsByClassName
+  document.querySelector('.kk') // 返回第一个类名为kk的元素
+  document.querySelectorAll('.kk') // 返回所有类名为kk的元素
+  
+  document.createElement
+  document.createTextNode
+
+  $choseDocument.parentNode // 获取父节点
+  $choseDocument.nextElementSilbing // 获取下一个兄弟节点
+  $choseDocument.previousElementSilbing // 获取上一个兄弟节点
+  $choseDocument.firstElementChild // 获取$choseDocument的第一个子节点
+  $choseDocument.lastElementChild // 获取$choseDocument的最后一个子节点
+  $chodeDocument.children
+
+    
+  ele.appendChild(el);
+  ele.removeChild(el); // 添加、删除子元素
+  ele.replaceChild(el1, el2); // 替换子元素
+到顶部的距离
+  http://www.ruanyifeng.com/blog/2009/09/find_element_s_position_using_javascript.html
+  $0.getBoundingClientRect() // 那就是使用getBoundingClientRect()方法。它返回一个对象，其中包含了left、right、top、bottom四个属性，分别对应了该元素的左上角和右下角相对于浏览器窗口（viewport）左上角的距离。
+  var X= this.getBoundingClientRect().top+document.documentElement.scrollTop;  // 元素到网页顶部的距离
+
+
+http1.0 http1.1  http2.0区别
+  http长链接的意思是 允许在同一个tcp连接上建立多个http连接。而且最终长连接生不生效 以服务端为准
+  http1.0 需要手动配置 connection: keep-alive  
+  http1.1 默认就是长链接
+  http2.0 使用多路复用  单一连接  多个http连接可以共用一个tcp连接 stream 的形式
+  http2.0 相对于 1.1 支持对header数据压缩
+  htt1.1 相对于1.0支持断点续传  利用content-length
+
+
+跨域
+  浏览器的同源策略
+    什么是同源：相同协议 相同域名 相同端口
+  解决方案
+  jsonp
+  cors
+    在请求头中添加origin字段, node端判断在不在允许请求的白名单里，若不在许可范围内 正常返回响应体 但是响应头中没有Access-Control-Allow-Origin字段，
+    浏览器发现没有该字段 会抛错，会被ajax请求的onerror捕获，这种错误无法通过错误码识别，因为有可能status是200
+    响应头中的Access-Control-Allow-Origin的值要么是请求头的中origin要么是*
+  node层做转发
+
+es5实现es6的继承 
+  class B{}  class A extends B {}
+  => function A() {}; function B() {};  A.prototype = new B();  A.prototype.constructor = A; 
+  //上面的实现方式缺点： 在定义A的时候执行了new B()  调用了B的构造函数
+  => function A() {}; function B() {}: A.prototype = Object.create(B.prototype); A.prototype.constructor = A;
+
+实现水平垂直居中的几种方法：
+  行内元素：
+    水平居中：
+      text-align: center
+    垂直居中：
+      line-height = 父元素高
+
+
+  块级元素：
+    水平居中：
+      1.margin: 0 auto
+      2.给父元素设置 display: flex;  justify-content: center;
+      3.给元素设置position: absolute; top: 50%, left: 50%  margin-top: 负的元素高 margin-left: 负的元素宽
+        父元素设置：position: relative
+        或者 不用margin用transform: translate(-50%, -50%) // translate是相对于左上角的 位置平移，在不知道元素宽高的时候可以用这个
+    垂直居中：
+      1.给元素设置position: absolute; top: 50%, left: 50%  margin-top: 负的元素高 margin-left: 负的元素宽
+      2.给父元素设置 display: flex;  align-items: center;
+
+怎么做的自适应
+
+display: flex
+  父元素设置display: flex
+  可以给父元素设置flex-direction  jusify-content align-items flex-wrap（一行主轴放不下时如何换行，值有nowrap wrap wrap-reverse） 等元素
+  可以给子元素设置的属性：order(给元素排序，数值越小越靠前) flex-grow 项目的放大比例 flex-shrink 项目的缩小比例 align-self 项目自己的对齐方式 
+盒子模型
+  盒子的大小包括content padding border 不包括margin
+
+BFC： 特定区域内怎么变化 不会影响区域外面
+  触发bfc条件：
+    body根元素
+    浮动元素
+    position absolute || relative 的元素
+    display: inline-block
+    overflow: scroll || auto || hidden
+
+   1.同一个Bfc的元素 垂直margin会发生合并
+   2.bfc可以包含浮动元素。用于解决高度塌陷  如果子元素是float的 父元素可以设置overflow: hidden 触发bfc
+   4.可以防止元素被浮动元素覆盖。可以给被覆盖的元素制造bfc  可以实现两列自适应布局
+-----------------------------------
+css 加速GPU 的方法 ：
+  transform: translate3d(0,0,0)
+  opacity
+  filter // 设置滤镜的
+
+动画卡顿的原因：
+  浏览器绘制的时间间隔基本上是16.7ms。但是每一帧的画面不能保证在16.7ms的间隔内完成渲染工作
+
+  解析Dom树 解析css树
+  合并dom树 css树 生成渲染树
+  布局：计算元素位置
+  绘制：在多个层上绘制 DOM 元素的的文字、颜色、图像、边框和阴影等。
+  渲染层合并
+
+  当以上步骤时间总和 > 16.7ms就会发生卡顿
+
+  开启GPU加速，不会发生重排和重绘，因为在开启GPU加速时，是把那个动画元素放在了新的合成层里，所以不需要重排重绘，只需要合并成图层的时间
+  开启GPU加速，不一定提升性能。因为：虽然不会发生重排重绘，但是建立新的合成层，新的图层就需要一定的内存空间，而且图层在合成时，图层越多耗费的时间肯定也是越多的，所以疯狂的开启GPU加速，不但不能解决性能问题，反而可能会带来性能问题。
+
+
+不用css3 动画 如何平滑过度
+  使用window.requestAnimationFrame
+  向下兼容的
+
+window.requestAnimationFrame(function cb{})  // 浏览器下一次重绘之前调用cb，调一次只会执行一次
+
+  缺点：
+    window.requestAnimationFrame的callback在浏览器tab页被关掉 或者浏览器最小化的时候是不会被执行的而css3的animation 在tab来回切换的时候就重新计算布局，营造没有暂停动画的假象
+
+如何减少重排重绘？
+  用visibility:hidden 代替display:none
+  如果增加元素或者clone元素，可以先把元素通过documentFragment放入内存中，等操作完毕后，再appendChild到DOM元素中
+  使用resize事件时，做防抖和节流处理。
+  批量修改元素时，可以先让元素脱离文档流，等修改完毕后，再放入文档流。
+----------------------------------------
+https
+  1. 场景：客户端与服务器交互
+    客户端用服务器的公钥加密随机数，服务器用私钥解密随机数
+    之后客户端与服务器的交互都是用随机数加密的，是个对成加密过程
+    
+    客户端如何获取服务器的公钥 ：
+      服务器发送给客户端ssl证书，这个ssl证书是CA自己的私钥加密而成的。证书里有服务器的公钥，证书的发布机构CA,证书的有效期
+      浏览器下载ssl证书后查找自己本机受信任的证书，用于校验证书是否合法。如果合法，从本机去除这个受信任的CA的公钥，进行解密。这样就拿到了服务器的公钥。
+
+
+    
+http状态码
+commonjs amd cmd 都是运行时确定依赖关系
+  commonjs:
+    同步读取模块，适合nodejs，由于网络的原因，并不适合浏览器端（异步加载）输出模块用module.exports 引用模块用require
+  amd：
+    require([module], callback) // 异步加载模块，依赖前置。所有依赖加载完成 执行callback
+  cmd
+    define(function(require, module, exports) { // 按需加载，用到模块再require
+      console.log(1);
+      require('./a.js')
+    })
+  es6模块：编译时确定依赖关系
+    import 导入模块 export 导出模块
+  commonjs 导出的是模块的拷贝 es6模块导出的是值的引用
+  浏览器还可以使用script标签引入模块 加上async defer属性
+
+
+
+浏览器缓存
+eventloop
+  macrotask: settimeout  setinterval  setimmidate
+  mictask: promise process.nexttick
+
+
+ajax fetch  
+cookie  localstorage sessionstorage区别
+基本类型
+MVVM
+
+
+实现fileupload
+
+es6的方法
+csrf xss
+  csrf: 利用cookie的过期时间没那么即时，将一个网站的登陆态  带到另一个网站。用户登录了A网站 然后访问B网站（黑客网站）然后在B向A的服务器发出了请求
+   解决方案： 
+    1。验证 HTTP Referer 字段；2。在请求地址中添加 token 并验证；3.在 HTTP 头中自定义属性并验证
+  xss: 用户提交的表单内容可能有<script >脚本  解决方案：替换特殊字符
+webpack 打包优化
+浏览器渲染过程
+webpack热更新
+webpack打包原理
+webpack性能优化
+
+
+cdn什么时候回源  怎么强制回源
+  在CDN环境下，web访问数据通常会经历客户端本地缓存和CDN边缘节点缓存两个阶段。如果这两个阶段均无法响应客户的请求的话，
+  那么最后会由CDN节点向源站点发起回源请求，进而从源站点获取最新的数据，更新CDN节点的本地缓存，最后将最新的数据返回给客户端。
+cdn的优点
+  速度快
+  解决同域名请求并发个数限制
+
+generator自执行 co
+如何排查node内存泄漏
+动画不用css 还怎么实现  => window.requestAnimationFrame 渲染上的优势， 精确 settimeoutw为什么不精确了
+
+react为什么废弃mixin
+react setState原理
+react fiber https://zhuanlan.zhihu.com/p/31634312  现状
+redux
+redux mobx
+redux-saga redux-thunk
+react hook 自定义hook
+
+
+
+
+------------- 缓存专项-------------
+
+servicewoker 相当于本地的proxy.可以对浏览器的请求进行拦截并返回 达到离线缓存效果  基于webworker实现的
+
+
+- 目前web应用缓存方案：
+  1. 利用http请求头和响应头字段 http缓存
+  2. html5提供了App cache来解决静态文件存储的问题，它通过将要缓存的静态文件声明在一个manifest文件清单里，
+  然后在要缓存的html html的标签里里通过manifest属性关联清单文件即可在下次载入html时优先加载缓存清单中列出的静态文件
+  流程：
+    browser  ----访问离线应用---> App cache --- 检查manifest文件是否更新---> if 有更新 则把所有manifest里指定的文件全部重新拉取
+     ^                            |
+     |-----返回cache中的资源--------|
+  3.localstorage 存储大小在2.5N ~ 10M之间 不同浏览器 ls大小不同  不能存静态资源
+  4.IndexdDB  浏览器数据库  json形式存储 受同源策略限制 有domain 存储空间不小于250M 不仅可以存储字符串 还以存储二进制
+  5.servicewoker 相当于本地的proxy.可以对浏览器的请求进行拦截并返回 达到离线缓存效果 通过fetch拦截到用户的所用请求，可以不向服务器发送，并可以将请求转向本地缓存或其它资源文件的加载，无论是数据还是静态文件，然后可以通过javascript的操作进行增量更新应用数据，而且同时不阻塞浏览器的渲染进程
+
+
+  --------------------
+
+
+
+项目
+小程序原理
+wets 优点 缺点
+graphql 优点 缺点
+MVVM
+react 16新特性：
+  1.lazy功能 v16.6
+  2.react hook v.16.7-alpha
+    react hook 
+    https://juejin.im/post/5bdfc1c4e51d4539f4178e1f
+    useState如何记住上一次的state的：每个节点有个fiber对象，其中有memorizedState记录上次的state值
+  3.React.memo 提供给functionalComponent的类似于classCompoent中的PureComponent
+    const FunctionalComponent = React.memo((props) => {
+      // only render if props change
+    })
+
+react mixin坏处  hoc好处
+react fiber
+bill
+项目拆分
+
+
+算法
+
+
+CDN，即Content Delivery Network，内容分发网络，
+其搭建的思路是尽可能避开互联网上有可能影响数据传输速度和稳定性的瓶颈和环节，
+尽量使内容传输的更快更稳定。CDN通过在网络边缘部署边缘服务器，
+依靠CDN中心平台的负载均衡、内容分发及调度等功能，使用户就近获取所需的内容，降低网络拥堵，
+提高用户访问响应速度和命中率。所以基本上CDN就是广泛采用各种缓存服务器，
+使得用户的请求直接由这些缓存服务器响应，加快了响应速度；
+只有在用户请求的资源在缓存服务器上没有找到或者请求访问的资源在源站点服务器上已经修改过的情况下，
+缓存服务器才会去访问源站点服务器以获取最新的资源。
+
+
+
+为了便于客户端使用数据，逐渐形成了一种非正式传输协议，人们把它称作JSONP，
+该协议的一个要点就是允许用户传递一个callback参数给服务端，
+然后服务端返回数据时会将这个callback参数作为函数名来包裹住JSON数据，
+这样客户端就可以随意定制自己的函数来自动处理返回数据了。
+
+
+不管jQuery也好，extjs也罢，又或者是其他支持JSONP的框架，他们幕后所做的工作都是一样的，下面我来循序渐进的说明一下JSONP在客户端的实现。
+1）我们知道，哪怕跨域js文件中的代码（当然指符合web脚本安全策略的），web页面也是可以无条件执行的。
+远程服务器remoteserver.com根目录下有个remote.js文件代码如下：
+alert('我是远程文件');
+
+本地服务器localserver.com下有个jsonp.html页面代码如下：
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <script type="text/javascript" src="http://remoteserver.com/remote.js"></script>
+  </head>
+  <body></body>
+</html>
+
+毫无疑问，页面将会弹出一个提示窗体，显示跨域调用成功。
+2）现在我们在jsonp.html页面定义一个函数，然后在远程remote.js中传入数据进行调用。
+jsonp.html页面代码如下：
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <script type="text/javascript">
+      var localHandler = function(data){
+          alert('我是本地函数，可以被跨域的remote.js文件调用，远程js带来的数据是：' + data.result);
+      };
+    </script>
+    <script type="text/javascript" src="http://remoteserver.com/remote.js"></script>
+  </head>
+  <body></body>
+</html>
+
+remote.js文件代码如下：
+localHandler({
+  "result":"我是远程js带来的数据"
+});
+
+运行之后查看结果，页面成功弹出提示窗口，显示本地函数被跨域的远程js调用成功，并且还接收到了远程js带来的数据。很欣喜，跨域远程获取数据的目的基本实现了，但是又一个问题出现了，怎么让远程js知道它应该调用的本地函数叫什么名字呢？毕竟是JSONP的服务者都要面对很多服务对象，而这些服务对象各自的本地函数都不相同啊？我们接着往下看。
+3）聪明的开发者很容易想到，只要服务端提供的js脚本是动态生成的就行了呗，这样调用者可以传一个参数过去告诉服务端“我想要一段调用XXX函数的js代码，请你返回给我”，于是服务器就可以按照客户端的需求来生成js脚本并响应了。
+看jsonp.html页面的代码：
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <script type="text/javascript">
+      // 得到航班信息查询结果后的回调函数
+      var flightHandler = function(data){
+          alert('你查询的航班结果是：票价 ' + data.price + ' 元，' + '余票 ' + data.tickets + ' 张。');
+      };
+      // 提供jsonp服务的url地址（不管是什么类型的地址，最终生成的返回值都是一段javascript代码）
+      var url = "http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998&callback=flightHandler";
+      // 创建script标签，设置其属性
+      var script = document.createElement('script');
+      script.setAttribute('src', url);
+      // 把script标签加入head，此时调用开始
+      document.getElementsByTagName('head')[0].appendChild(script); 
+    </script>
+  </head>
+  <body></body>
+</html>
+
+这次的代码变化比较大，不再直接把远程js文件写死，而是编码实现动态查询，而这也正是JSONP客户端实现的核心部分，本例中的重点也就在于如何完成JSONP调用的全过程。
+我们看到调用的url中传递了一个code参数，告诉服务器我要查的是CA1998次航班的信息，而callback参数则告诉服务器，我的本地回调函数叫做flightHandler，所以请把查询结果传入这个函数中进行调用。
+OK，服务器很聪明，这个叫做flightResult.aspx的页面生成了一段这样的代码提供给jsonp.html（服务端的实现这里就不演示了，与你选用的语言无关，说到底就是拼接字符串）：
+flightHandler({
+  "code": "CA1998",
+  "price": 1780,
+  "tickets": 5
+});
+
+我们看到，传递给flightHandler函数的是一个json，它描述了航班的基本信息。运行一下页面，成功弹出提示窗口，JSONP的执行全过程顺利完成！
+
+

@@ -1,0 +1,60 @@
+     Client        Node             Server
+            
+    访问地址 --1--> 接受请求
+                    |2
+                路由分析，获取即将展示的路由信息
+                    |3          
+                获取组件所需数据---4--->接受接口请求，返回接口数据
+                                           |5
+               渲染组件，返回渲染出<---------|
+显示html内容 <--6--的HTML结果
+加载bundle.js文件
+    |7
+获取bundle.js文件 
+内容          ----8->接受请求
+                        |9
+加载运行bundle.js<--10--返回bundle.js
+进行客户端渲染
+    | 11
+bundle.js中
+发送ajax请求 --12---> 收到ajax请求，---13--->接受接口请求，返回数据
+                    代理到业务接口                 |
+获取到ajax请求<--15--- 获取数据并返回<-----14--------|
+完成客户端渲染
+
+
+SSR 中客户端渲染与服务器端渲染路由代码的差异
+客户端路由：
+const App = () => {
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <div>
+          <Route path='/' component={Home}>
+  		</div>
+      </BrowserRouter>
+    </Provider>
+  )
+}
+
+ReactDom.render(<App/>, document.querySelector('#root'))
+
+服务器端路由代码
+const App = () => {
+  return 
+    <Provider store={store}>
+      <StaticRouter location={req.path} context={context}>
+        <div>
+          <Route path='/' component={Home}>
+        </div>
+      </StaticRouter>
+    </Provider>
+}
+
+Return ReactDom.renderToString(<App/>)
+
+通过 BrowserRouter 我们能够匹配到浏览器即将显示的路由组件，
+对浏览器来说，我们需要把组件转化成 DOM，所以需要我们使用 ReactDom.render 
+方法来进行 DOM 的挂载。而 StaticRouter 能够在服务器端匹配到将要显示的组件，
+对服务器端来说，我们要把组件转化成字符串，这时我们只需要调用 ReactDom 提供的
+ renderToString 方法，就可以得到 App 组件对应的 HTML 字符串。

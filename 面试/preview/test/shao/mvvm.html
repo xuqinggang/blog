@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="root">
+        <input type="text" v-model="text" />{{text}}
+    </div>
+    <script>
+    /* 首先，将自己赋给了一个全局变量 Dep.target；
+       其次，执行了 update 方法，进而执行了 get 方法，get 的方法读取了 vm 的访问器属性，
+       从而触发了访问器属性的 get 方法，get 方法中将该 watcher 添加到了对应访问器属性的 dep 中；
+       再次，获取属性的值，然后更新视图。
+       最后，将 Dep.target 设为空。因为它是全局变量，也是 watcher 与 dep 关联的唯一桥梁，任何时刻
+       都必须保证 Dep.target 只有一个值。 */
+        function Watcher(vm, node, name){
+            Dep.target = this;
+            this.name = name;
+            this.node = node;
+            this.vm = vm;
+            this.update();
+            Dep.target = null;
+        }
+
+        Watcher.prototype = {
+            update: function(){
+                this.get();
+                this.node.nodeValue = this.value;
+            },
+            get: function(){
+                this.value = this.vm[this.name]; //触发相应的get
+            }
+        }
+
+        function Dep(){
+            this.subs = [];
+        }
+
+        Dep.prototype = {
+            addSub: function(sub){
+                this.subs.push(sub)
+            },
+            notify: function(){
+                this.subs.forEach(function(sub){
+                    sub.update();
+                })
+            },
+        }
+
+        function compile(node, vm) {
+            var reg = /\{\{(.*)\}\}/;
+            if(node.nodeType === 1){
+                var attr = node.attributes;
+                for(var i = 0; i < attr.length; i++){
+                    if(attr[i].nodeName === 'v-model'){
+                        var name = attr[i].nodeValue;
+                        node.addEventListener('input', function(e){
+                            vm[name] = e.target.value;
+                        }, false)
+
+                        node.value = vm[name];
+                        node.removeAttribute('v-model');
+                    }
+                }
+            }
+            if(node.nodeType === 3){
+                if(reg.test(node.nodeValue)){
+                    var name = RegExp.$1;
+                    name = name.trim();
+                    // node.nodeValue = vm[name];
+                    new Watcher(vm, node, name);
+                }
+            }
+        }
+
+        function defineReactive(obj, key, val){
+            var dep = new Dep();
+            Object.defineProperty(obj, key, {
+                get: function(){
+                    if(Dep.target){
+                        dep.addSub(Dep.target);
+                    }
+                    return val;
+                },
+                set: function(newVal){
+                    if(newVal === val) return;
+                    val = newVal;
+                    dep.notify();
+                }
+            })
+        }
+
+        function oberve(obj, vm){
+            Object.keys(obj).forEach(function(key){
+                defineReactive(vm, key, obj[key]);
+            })
+        }
+
+        function nodeToFragment(node, vm){
+            var flag = document.createDocumentFragment();
+            var child;
+            while(child = node.firstChild){
+                compile(child, vm);
+                flag.appendChild(child);
+            }
+            return flag;
+        }
+
+        function Vue(options){
+            this.data = options.data;
+            var data = this.data;
+            oberve(data, this);
+
+            var id = options.el;
+            var dom = nodeToFragment(document.getElementById(id), this);
+            document.getElementById('root').appendChild(dom);
+        }
+
+        var vm = new Vue({
+            el: 'root',
+            data: {
+                text: 'hello world'
+            }
+        })
+    </script>
+</body>
+</html>

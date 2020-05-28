@@ -1,0 +1,13 @@
+{
+  "name": "observer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "typescript": "2.5.2"
+  }
+}

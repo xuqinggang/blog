@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  .wrapper {
+    position: relative;
+
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    width: 100px;
+    height: 100px;
+    border: 1px solid red;
+  }
+
+  .inner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+</style>
+
+<body>
+  <div class="wrapper">
+    <div class="inner">inner</div>
+  </div>
+  <div id="div1">
+    <button id="button1">button</button>
+  </div>
+</body>
+<script>
+  var div1 = document.getElementById('div1')
+  var button1 = document.getElementById('button1')
+  div1.addEventListener('click', (e) => {
+    console.log(e.currentTarget)
+  }, true) // true：表示div1在事件的捕获阶段响应事件
+  button1.addEventListener('click', (e) => {
+    console.log(e.currentTarget)
+    // e.stopPropagation() // 阻止事件冒泡
+  }, true);
+  button1.addEventListener('click', (e) => {
+    console.log(e.currentTarget)
+    // e.stopPropagation() // 阻止事件冒泡
+  }, false);
+  function handleClickHtml(e) {
+    console.log('html clicked')
+  }
+  document.addEventListener('click', e => {
+    console.log('document clicked')
+  })
+</script>
+
+</html>
