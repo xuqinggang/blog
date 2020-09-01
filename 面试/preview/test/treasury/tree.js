@@ -108,8 +108,8 @@ function postorderTraversal1(root) {
 postorderTraversal1(node1);//4 5 2 6 7 3 1
 
 // 层次遍历
-var levelOrder = function(root) {
-	if(!root){
+var levelOrder = function (root) {
+	if (!root) {
 		return;
 	}
 	var checkArr = [root];
@@ -118,8 +118,8 @@ var levelOrder = function(root) {
 		for (var i = 0; i < checkArr.length; i++) {
 			var item = checkArr[i];
 			console.log(item.val);
-			item.left && newCheckArr.push(item.left);	
-			item.right && newCheckArr.push(item.right);	
+			item.left && newCheckArr.push(item.left);
+			item.right && newCheckArr.push(item.right);
 		}
 		checkArr = newCheckArr;
 	}
@@ -128,36 +128,36 @@ levelOrder(node1);//1 2 3 4 5 6 7
 
 
 /* ================判断完全二叉树=============== */
-var isCompleteTree = function(root) {
-    if(root === null) return true   //如果是空树，也是完全二叉树
-    let queue = [root]
-    while(queue.length != 0){        //层序遍历
-        let p = queue.shift()
-        if(p){                //区别正常层序遍历判空左右，不判空左右孩子直接进队列
-            queue.push(p.left)
-            queue.push(p.right)
-        }
-        else{                //如果当前结点为空，则将队列剩下元素全部弹出，如果非空，则不是完全二叉树。
-            while(queue.length != 0){
-                let pson = queue.shift()
-                if(pson)
-                    return false
-            }
-        }
-    }
-    return true        //如果为空，跳出循环并返回是完全二叉树
+var isCompleteTree = function (root) {
+	if (root === null) return true   //如果是空树，也是完全二叉树
+	let queue = [root]
+	while (queue.length != 0) {        //层序遍历
+		let p = queue.shift()
+		if (p) {                //区别正常层序遍历判空左右，不判空左右孩子直接进队列
+			queue.push(p.left)
+			queue.push(p.right)
+		}
+		else {                //如果当前结点为空，则将队列剩下元素全部弹出，如果非空，则不是完全二叉树。
+			while (queue.length != 0) {
+				let pson = queue.shift()
+				if (pson)
+					return false
+			}
+		}
+	}
+	return true        //如果为空，跳出循环并返回是完全二叉树
 };
 
 /* ================二叉树深度=============== */
-var maxDepth = function(root) {
-  if (root === null) {
-    return 0;
-  } else {
-    var leftDepth = maxDepth(root.left),
-        rightDepth = maxDepth(root.right);
-    var childDepth = leftDepth > rightDepth ? leftDepth : rightDepth;
-    return 1 + childDepth;
-  }
+var maxDepth = function (root) {
+	if (root === null) {
+		return 0;
+	} else {
+		var leftDepth = maxDepth(root.left),
+			rightDepth = maxDepth(root.right);
+		var childDepth = leftDepth > rightDepth ? leftDepth : rightDepth;
+		return 1 + childDepth;
+	}
 };
 
 /* ================二叉树左视图=============== */
@@ -172,61 +172,57 @@ var maxDepth = function(root) {
 // 另外一个条件式当两个指针相遇就终止,这说明有闭环
 // 为什么有环的情况下二者一定会相遇呢？因为fast先进入环，在slow进入之后，如果把slow看作在前面，
 // fast在后面每次循环都向slow靠近1，所以一定会相遇，而不会出现fast直接跳过slow的情况。  
-bool isLoop(pNode pHead)  
-{  
-    pNode fast = pHead;  
-    pNode slow = pHead;  
-    //如果无环，则fast先走到终点  
-    //当链表长度为奇数时，fast->Next为空  
-    //当链表长度为偶数时，fast为空  
-    while( fast != NULL && fast->next != NULL)  
-    {  
-  
-        fast = fast->next->next;  
-        slow = slow->next;  
-        //如果有环，则fast会超过slow一圈  
-        if(fast == slow)  
-        {  
-            break;  
-        }  
-    }  
-  
-    if(fast == NULL || fast->next == NULL  )  
-        return false;  
-    else
-        return true;  
+bool isLoop(pNode pHead)
+{
+	pNode fast = pHead;
+	pNode slow = pHead;
+	//如果无环，则fast先走到终点  
+	//当链表长度为奇数时，fast->Next为空  
+	//当链表长度为偶数时，fast为空  
+	while (fast != NULL && fast -> next != NULL) {
+
+		fast = fast -> next -> next;
+		slow = slow -> next;
+		//如果有环，则fast会超过slow一圈  
+		if (fast == slow) {
+			break;
+		}
+	}
+
+	if (fast == NULL || fast -> next == NULL)
+		return false;
+	else
+		return true;
 }
 
 // 计算环的长度
 // 如果有环两个指针相遇，那么在相遇后让fast不动，slow继续走，
 //并开始计数，直到在两个指针重新相遇，这个长度就是环的长度。
-int loopLength(pNode pHead)  
-{  
-    if(isLoop(pHead) == false)  
-        return 0;  
-    pNode fast = pHead;  
-    pNode slow = pHead;  
-    int length = 0;  
-    bool begin = false;  
-    bool agian = false;  
-    while( fast != NULL && fast->next != NULL)  
-    {  
-        fast = fast->next->next;  
-        slow = slow->next;  
-        //超两圈后停止计数，挑出循环  
-        if(fast == slow && agian == true)  
-            break;  
-        //超一圈后开始计数  
-        if(fast == slow && agian == false)  
-        {             
-            begin = true;  
-            agian = true;  
-        }  
-  
-        //计数  
-        if(begin == true)  
-            ++length;  
-          
-    }  
-    return length;  
+int loopLength(pNode pHead)
+{
+	if (isLoop(pHead) == false)
+		return 0;
+	pNode fast = pHead;
+	pNode slow = pHead;
+	int length = 0;
+	bool begin = false;
+	bool agian = false;
+	while (fast != NULL && fast -> next != NULL) {
+		fast = fast -> next -> next;
+		slow = slow -> next;
+		//超两圈后停止计数，挑出循环  
+		if (fast == slow && agian == true)
+			break;
+		//超一圈后开始计数  
+		if (fast == slow && agian == false) {
+			begin = true;
+			agian = true;
+		}
+
+		//计数  
+		if (begin == true)
+			++length;
+
+	}
+	return length;
 }
